@@ -1,0 +1,37 @@
+<app-home></app-home>
+
+<hr style="border: 3px solid rgb(0, 0, 0); height: 3px;">
+
+<h3 class="mt-5 mb-3"> Contact List</h3>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Phone Number</th>
+            <th>Update at</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let contact of contacts">
+            <td>{{contact.id}}</td>
+            <td>{{contact.nama}}</td>
+            <td>{{contact.phoneNumber}}</td>
+            <td>{{contact.updatedAt}}</td>
+            <td>
+                <button class="btn btn-sm btn-danger mx-1" (click)="deleteContact(contact.id)">Delete</button>
+                <button class="btn btn-sm btn-secondary mx-1"[routerLink]="['/edit', contact.id]">Edit</button>
+            </td>        
+        </tr>
+    </tbody>
+</table>
+
+<ul *ngIf="contacts.length; else noContact">
+    
+</ul>
+
+<ng-template #noContact>
+    <p>No contact list available.</p>
+</ng-template>

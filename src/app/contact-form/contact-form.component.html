@@ -1,0 +1,46 @@
+<app-home></app-home>
+
+<form [formGroup]="contactForm" (ngSubmit)="onSubmit()">
+
+    <hr style="border: 3px solid rgb(0, 0, 0); height: 3px;">
+
+    <h3 class="mt-5 mb-3"> Create a new contact</h3>
+
+    <div class="row m-3">
+        
+        <div class="col">
+            <label class="form-label">Nama :</label>
+            <input class="form-control" type="string" formControlName="nama" placeholder="namamu">
+            <div *ngIf="contactForm.get('nama')?.invalid && contactForm.get('nama')?.touched">
+                name is requerid.
+            </div>
+        </div>
+
+        <div class="col">
+            <label class="form-label">Phone Number :</label>
+            <input class="form-control" type="number" min="1000000000" max="9999999999999" formControlName="phoneNumber" placeholder="phone number">
+            <small class="text-danger" *ngIf="contactForm.get('phoneNumber')?.invalid && contactForm.get('phoneNumber')?.touched">
+                phone number is requerid.
+            </small>
+            <small class="text-danger" *ngIf="contactForm.get('phoneNumber')?.hasError('min')">
+                Nomor telepon terlalu pendek (min 10 digit).
+            </small>
+            <small class="text-danger" *ngIf="contactForm.get('phoneNumber')?.hasError('max')">
+                Nomor telepon terlalu panjang (max 13 digit).
+            </small>
+        </div>
+
+    </div>
+
+    <div class="row m-3">
+        
+        <div class="col">
+            <label class="form-label">Tanggal :</label><br>
+            <span>{{waktuSekarang}}</span>
+        </div>
+
+    </div>
+
+    <button class="btn btn-primary" type="submit" [disabled]="contactForm.invalid">Save</button>
+    
+</form>
