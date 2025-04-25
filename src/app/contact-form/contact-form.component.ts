@@ -58,7 +58,7 @@ export class ContactFormComponent implements OnInit {
       const idParam = this.activatedRoute.snapshot.paramMap.get('id');
       const id = idParam ? Number(idParam) : null;
 
-      const dataBaru = {
+      const dataBaru: any = {
         id: id ?? 0, // mangkih auto diurus service se
         nama: this.contactForm.value.nama,
         phoneNumber: this.contactForm.value.phoneNumber,
@@ -73,16 +73,18 @@ export class ContactFormComponent implements OnInit {
       if(id !== null && !isNaN(id)){
         //Edit
         this.contactService.updateContact(id, dataBaru).subscribe(() => {
-          alert ('Update processed')
+          alert ('Update a processed')
+         this.router.navigate(['/list']);
         })
       }else{
         //Add new
-        this.contactService.addContact(dataBaru).subscribe(() => {
-          alert ('Update processed')
+        this.contactService.addContact(dataBaru).subscribe((res) => {
+        this.contakList.push(res); 
+          alert ('Create a processed')
+
+          this.router.navigate(['/list']);
         })
       }
-
-      this.router.navigate(['/list']);
 
     }
     else {
