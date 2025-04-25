@@ -32,18 +32,17 @@ export class ContactFormComponent implements OnInit {
     this.updateWaktu();
     setInterval(() => this.updateWaktu(), 1000);
     
-    //Data dimunculkan untuk edit sesuai id
+    //Ambil parameter id dari URL
     const idParam = this.activatedRoute.snapshot.paramMap.get('id');
 
-    let id = this.activatedRoute.snapshot.paramMap.get('id');
+      // Konversi id ke number
+    const id = idParam ? Number(idParam) : null;  
 
-    if(id){
-      const id = Number(idParam); // konversi string ke number
-      let contact = this.contactService.getContact(id)
-
-      if(contact){
+    if(id !== null && !isNaN(id)){
+      this.contactService.getContact(id).subscribe(contact => {
+      if(contact)
         this.contactForm.patchValue(contact)
-      }
+      })
     }
   }
 
@@ -54,7 +53,6 @@ export class ContactFormComponent implements OnInit {
 
   onSubmit() {
     if(this.contactForm.valid){
-      alert ('Data valid');
 
       const now = new Date();
       const idParam = this.activatedRoute.snapshot.paramMap.get('id');
@@ -74,10 +72,14 @@ export class ContactFormComponent implements OnInit {
   
       if(id !== null && !isNaN(id)){
         //Edit
-        this.contactService.updateContact(id, dataBaru)
+        this.contactService.updateContact(id, dataBaru).subscribe(() => {
+          alert ('Update processed')
+        })
       }else{
         //Add new
-        this.contactService.addContact(dataBaru)
+        this.contactService.addContact(dataBaru).subscribe(() => {
+          alert ('Update processed')
+        })
       }
 
       this.router.navigate(['/list']);

@@ -1,50 +1,37 @@
 import { Injectable } from '@angular/core';
 import { Contact } from '../models/contact';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ContactService {
 
-  private contacts: Contact[] = [];
+    private apiUrl = "http://localhost:3002"
+    
+    private contacts: Contact[] = [];
 
-  constructor(){
-    let savedcontacts = localStorage.getItem("contacts");
-    this.contacts = savedcontacts? JSON.parse(savedcontacts):[];
-  }
+    constructor(private http: HttpClient){}
 
   //CRUD
-  getContacts(): Contact[] {
-    return this.contacts;
+  getContacts(): Observable<Contact[]> {
+    return this.http.get<Contact[]>(this.apiUrl + "/contacts")
   }
 
-  getContact(id: number): Contact | undefined {
-    return this.contacts.find(con => con.id === id)
+  getContact(id: number): Observable<Contact> {
+    return this.http.get<Contact>(this.apiUrl + "/contact/"+id)
   }
 
-  addContact(contact: Contact): void {
-
-    const storedContacts = JSON.parse(localStorage.getItem("contacts") || '[]');
-    // Cari ID terbesar yang sudah ada
-    const maxId = storedContacts.length > 0 
-      ? Math.max(...storedContacts.map((c: Contact) => c.id)) 
-      : 0;
-    // Set ID baru secara otomatis
-    contact.id = maxId + 1;
-
-    this.contacts.push(contact);
-    localStorage.setItem("contacts", JSON.stringify(this.contacts));
+  addContact(contact: Contact): Observable<void> {
+    return this.http.post<void>(this.apiUrl + "/contact", contact)
   }
 
-  deleteContact(id: number): void {
-    let index = this.contacts.findIndex(con => con.id === id);
-    this.contacts.splice(index,1);
-    localStorage.setItem("contacts", JSON.stringify(this.contacts));
+  deleteContact(id: number): Observable<void> {
+    return this.http.delete<void>(this.apiUrl + "/contact/"+id)
   }
   
-  updateContact(_id: number, updatedContact: Contact): void {
-     let index = this.contacts.findIndex(con => con.id === updatedContact.id);
-     this.contacts[index] = updatedContact;
-     localStorage.setItem("contacts", JSON.stringify(this.contacts));
+  updateContact(id: number, updateContact: Contact): Observable<void> {
+    return this.http.put<void>(this.apiUrl + "/contact/" + id, updateContact)
   }
 }

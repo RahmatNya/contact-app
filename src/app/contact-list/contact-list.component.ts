@@ -16,11 +16,14 @@ export class ContactListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.contacts = this.contactService.getContacts()
+    this.contactService.getContacts().subscribe( contacts => {
+      this.contacts = contacts
+    });
   }
 
   deleteContact(id: number){
-    this.contactService.deleteContact(id);
+    this.contactService.deleteContact(id).subscribe(() => {
+      alert ("Delete request got processed.")});
   }
 
 }
